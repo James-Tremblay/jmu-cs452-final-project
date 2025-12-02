@@ -1,0 +1,30 @@
+Main Contributer: Caleb Collins
+
+itertools python -> check all possible combinations
+np verrifier -> yes answer in polynomial time
+
+greedy -> input cases that will not find the value
+anytime : give time return best answer
+complete search -> always find the value
+
+Dimacs -> big dataset with things
+
+Initial Idea: count the number of first literal negations, then take num_clauses - first_negations = first_bools.
+now find if there are more negations or more bools. Store that number. repeat for the second and third literals 
+and find the max of the three. that is your upper bound.
+(could we do min and find a solution?)
+
+What is Linear Programming (LP) Relaxation?
+For the Linear Programming (LP) Relaxation, we replace the original Boolean variables $x_1, x_2, \dots, x_n$ (which are either 0 or 1) with continuous variables $y_1, y_2, \dots, y_n$ that can take on any fractional value between 0 and 1.
+
+**a clause is satisfied if at least one literal is true**
+
+Reduction options:
+Max Clique 
+Longest Path (Optimization) 
+Max Cut
+
+I will do Max Clique:
+The maximum clique problem is a computational challenge in graph theory to find 
+the largest possible subset of vertices in a graph where every two vertices are 
+connected by an edge.
