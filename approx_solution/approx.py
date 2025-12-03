@@ -46,7 +46,7 @@ import random
 import sys
 import time
 import threading
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import argparse
 
 def parse_args():
@@ -56,8 +56,8 @@ def parse_args():
     parser.add_argument("-t", type=int, required=True,
                         help="Amount of time for program to run (in seconds)")
 
-    parser.add_argument("-p", type=int, required=True,
-                        help="The number of parrallel processes to use")
+    parser.add_argument("-p", type=int, default=1,
+                        help="The number of parallel processes to use")
 
     # Positional filename argument
     parser.add_argument("filename", type=str,
@@ -139,7 +139,7 @@ def main():
     n, m, clauses = read_file(filename)
     time_limit = args.t  # Use -t argument as time limit in seconds
     
-    print("Running anytime Max-3-SAT approximation...")
+    # print("Running anytime Max-3-SAT approximation...")
     best_score, best_assign, history = anytime_max3sat(n, m, clauses, time_limit=time_limit)
 
     # Output format
@@ -147,29 +147,28 @@ def main():
     for i in range(1, n+1):
         print(i, "T" if best_assign[i] else "F")
 
-    # Plot best score over time and save figure
-    if history:
-        times, scores = zip(*history)
-        times = list(times)
-        scores = list(scores)
+    # # Plot best score over time and save figure
+    # if history:
+    #     times, scores = zip(*history)
+    #     times = list(times)
+    #     scores = list(scores)
         
-        # Add final point at time_limit to show flat line
-        if times[-1] < time_limit:
-            times.append(time_limit)
-            scores.append(scores[-1])
+    #     # Add final point at time_limit to show flat line
+    #     if times[-1] < time_limit:
+    #         times.append(time_limit)
+    #         scores.append(scores[-1])
         
-        plt.figure()
-        plt.axhline(y=m, color='r', linestyle='--', label='Number of Clauses (m)')
-        plt.plot(times, scores, marker='o', label='Best score over time')
-        plt.legend()
-        plt.xlabel('Time (s)')
-        plt.ylabel('Best score (satisfied clauses)')
-        plt.title('Max-3-SAT: best score over time')
-        plt.grid(True)
-        plt.tight_layout()
-        plt.savefig('best_score_over_time.png')
-        plt.show()
-        plt.close()
+    #     plt.figure()
+    #     plt.axhline(y=m, color='r', linestyle='--', label='Number of Clauses (m)')
+    #     plt.plot(times, scores, marker='o', label='Best score over time')
+    #     plt.legend()
+    #     plt.xlabel('Time (s)')
+    #     plt.ylabel('Best score (satisfied clauses)')
+    #     plt.title('Max-3-SAT: best score over time')
+    #     plt.grid(True)
+    #     plt.tight_layout()
+    #     plt.show()
+    #     plt.close()
 
 
 if __name__ == "__main__":
