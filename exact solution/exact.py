@@ -5,7 +5,6 @@ def clause_sat(clause, a):
     return any((lit > 0 and a[lit-1]) or (lit < 0 and not a[-lit-1]) for lit in clause)
 
 def main():
-    print("Running...")
     path = sys.argv[1]
     with open(path) as f:
         n, m = map(int, f.readline().split())
@@ -29,4 +28,5 @@ def main():
         print(f"{i} {'T' if val else 'F'}")
 
 if __name__ == "__main__":
+    print("Running...")
     main()
