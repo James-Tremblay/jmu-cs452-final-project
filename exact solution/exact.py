@@ -1,51 +1,32 @@
-import itertools
-import time
+#!/usr/bin/env python3
+import sys, time, itertools
 
-def verify(clauses, assignment):
-    # NP verifier: checks a single assignment in polynomial time
-    for clause in clauses:
-        satisfied = False
-        for lit in clause:
-            v = abs(lit)
-            val = assignment[v]
-            if (lit > 0 and val) or (lit < 0 and not val):
-                satisfied = True
-                break
-        if not satisfied:
-            return False
-    return True
-
-def solve_3sat(num_vars, clauses):
-    # Brute force enumeration using itertools (explicitly allowed by project)
-    for combo in itertools.product([False, True], repeat=num_vars):
-        assignment = [None] + list(combo)
-        if verify(clauses, assignment):
-            return assignment
-    return None
-
-def load_instance(path):
-    with open(path) as f:
-        first = f.readline().split()
-        num_vars, num_clauses = map(int, first)
-        clauses = []
-        for _ in range(num_clauses):
-            a, b, c = map(int, f.readline().split())
-            clauses.append((a, b, c))
-    return num_vars, clauses
+def clause_sat(clause, a):
+    return any((lit > 0 and a[lit-1]) or (lit < 0 and not a[-lit-1]) for lit in clause)
 
 def main():
-    num_vars, clauses = load_instance("input.txt")
+    print("Running...")
+    path = sys.argv[1]
+    with open(path) as f:
+        n, m = map(int, f.readline().split())
+        clauses = [tuple(map(int, f.readline().split())) for _ in range(m)]
+
     start = time.time()
-    result = solve_3sat(num_vars, clauses)
-    end = time.time()
 
-    print("runtime:", end - start, "seconds")
+    best_val = -1
+    best_assignment = None
+    
+    for a in itertools.product([False, True], repeat=n):
+        val = sum(clause_sat(c, a) for c in clauses)
+        if val > best_val:
+            best_val = val
+            best_assignment = a
+            
+    runtime = time.time() - start
 
-    if result:
-        print("SAT")
-        print("assignment:", result[1:])
-    else:
-        print("UNSAT")
+    print(best_val)
+    print(" ".join("1" if x else "0" for x in best_assignment))
+    print(f"runtime: {runtime:.6f} seconds")
 
 if __name__ == "__main__":
     main()
