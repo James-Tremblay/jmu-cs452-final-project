@@ -1,46 +1,36 @@
 #!/usr/bin/env python3
-import os, time, subprocess, csv
+import subprocess
+import time
+import os
 
-TEST_DIR = "test_cases"
-SOLVER = "solver.py"
-OUT_CSV = "benchmark_results.csv"
+SCRIPT = os.path.join("test_cases", "run_test_cases.sh")
 
 def main():
-    test_files = sorted(f for f in os.listdir(TEST_DIR) if f.startswith("test_case"))
-    rows = []
+    if not os.path.exists(SCRIPT):
+        print(f"Error: {SCRIPT} does not exist.")
+        return
 
-    for tf in test_files:
-        path = os.path.join(TEST_DIR, tf)
-        print(f"Running {tf}...")
+    start = time.time()
 
-        start = time.time()
-        result = subprocess.run(
-            ["python3", SOLVER, path, "-p", "4"],
-            capture_output=True,
-            text=True
-        )
-        end = time.time()
-        runtime = end - start
+    # Call bash on all platforms
+    result = subprocess.run(
+        ["bash", SCRIPT],
+        capture_output=True,
+        text=True
+    )
 
-        # parse input size
-        with open(path) as f:
-            first = f.readline().strip().split()
-            n = int(first[0])
-            m = int(first[1])
+    end = time.time()
+    total = end - start
 
-        # parse output (first line = clauses satisfied)
-        output_lines = result.stdout.strip().splitlines()
-        satisfied = output_lines[0] if output_lines else "ERR"
+    print("===== WALL CLOCK TIME =====")
+    print(f"{total:.4f} seconds")
+    print("===========================\n")
 
-        rows.append([tf, n, m, runtime, satisfied])
-
-    # write CSV
-    with open(OUT_CSV, "w", newline="") as f:
-        w = csv.writer(f)
-        w.writerow(["file", "n", "m", "runtime_seconds", "clauses_satisfied"])
-        w.writerows(rows)
-
-    print(f"\nBenchmark complete. Results saved to {OUT_CSV}")
+    if result.stdout.strip():
+        print(result.stdout)
+    if result.stderr.strip():
+        print("===== ERRORS =====")
+        print(result.stderr)
 
 if __name__ == "__main__":
     main()
