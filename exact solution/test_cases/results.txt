@@ -1,0 +1,595 @@
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case10.txt
+16
+1 F
+2 F
+3 T
+4 F
+5 F
+6 T
+7 T
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case11.txt
+14
+1 F
+2 F
+3 F
+4 F
+5 F
+6 F
+7 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case12.txt
+18
+1 F
+2 F
+3 F
+4 T
+5 F
+6 F
+7 T
+8 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case13.txt
+7
+1 F
+2 F
+3 F
+4 F
+5 F
+6 T
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case14.txt
+21
+1 F
+2 F
+3 F
+4 T
+5 F
+6 F
+7 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case15.txt
+16
+1 F
+2 F
+3 F
+4 F
+5 T
+6 F
+7 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case16.txt
+5
+1 F
+2 F
+3 F
+4 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case17.txt
+7
+1 F
+2 F
+3 F
+4 F
+5 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case18.txt
+10
+1 F
+2 F
+3 F
+4 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case19.txt
+15
+1 F
+2 F
+3 F
+4 F
+5 F
+6 F
+7 F
+8 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case1.txt
+10
+1 F
+2 F
+3 F
+4 F
+5 F
+6 F
+7 F
+8 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case20.txt
+5
+1 F
+2 F
+3 F
+4 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case21.txt
+15
+1 F
+2 T
+3 F
+4 T
+5 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case22.txt
+4
+1 F
+2 F
+3 F
+4 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case23.txt
+9
+1 F
+2 F
+3 T
+4 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case24.txt
+13
+1 F
+2 F
+3 F
+4 F
+5 F
+6 F
+7 T
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case25.txt
+14
+1 F
+2 F
+3 F
+4 F
+5 F
+6 T
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case26.txt
+18
+1 F
+2 T
+3 F
+4 F
+5 T
+6 F
+7 T
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case27.txt
+9
+1 F
+2 T
+3 T
+4 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case28.txt
+6
+1 F
+2 F
+3 F
+4 T
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case29.txt
+10
+1 F
+2 F
+3 F
+4 T
+5 T
+6 T
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case2.txt
+24
+1 F
+2 F
+3 T
+4 T
+5 F
+6 T
+7 F
+8 T
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case30.txt
+9
+1 F
+2 F
+3 F
+4 F
+5 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case31.txt
+19
+1 F
+2 F
+3 F
+4 T
+5 T
+6 T
+7 F
+8 F
+9 F
+10 F
+11 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case32.txt
+14
+1 F
+2 F
+3 F
+4 F
+5 F
+6 T
+7 F
+8 F
+9 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case33.txt
+25
+1 F
+2 F
+3 F
+4 F
+5 T
+6 T
+7 F
+8 T
+9 T
+10 F
+11 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case34.txt
+9
+1 F
+2 F
+3 F
+4 T
+5 F
+6 F
+7 F
+8 F
+9 T
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case35.txt
+38
+1 F
+2 T
+3 F
+4 F
+5 F
+6 F
+7 T
+8 T
+9 T
+10 T
+11 T
+12 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case36.txt
+33
+1 F
+2 F
+3 F
+4 T
+5 F
+6 F
+7 F
+8 T
+9 T
+10 F
+11 F
+12 T
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case37.txt
+35
+1 F
+2 F
+3 F
+4 F
+5 T
+6 F
+7 T
+8 F
+9 T
+10 F
+11 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case38.txt
+27
+1 F
+2 F
+3 F
+4 F
+5 F
+6 F
+7 F
+8 T
+9 F
+10 F
+11 F
+12 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case39.txt
+33
+1 F
+2 T
+3 F
+4 F
+5 F
+6 F
+7 T
+8 F
+9 F
+10 T
+11 F
+12 F
+13 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case3.txt
+7
+1 F
+2 F
+3 T
+4 F
+5 F
+6 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case40.txt
+22
+1 F
+2 F
+3 F
+4 F
+5 F
+6 T
+7 T
+8 T
+9 T
+10 T
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case41.txt
+18
+1 F
+2 F
+3 F
+4 F
+5 F
+6 T
+7 F
+8 T
+9 T
+10 F
+11 F
+12 F
+13 T
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case42.txt
+14
+1 F
+2 F
+3 F
+4 F
+5 F
+6 F
+7 F
+8 F
+9 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case43.txt
+82
+1 F
+2 T
+3 T
+4 F
+5 F
+6 F
+7 F
+8 T
+9 F
+10 F
+11 F
+12 F
+13 F
+14 T
+15 F
+16 F
+17 T
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case44.txt
+46
+1 F
+2 F
+3 T
+4 T
+5 T
+6 F
+7 F
+8 T
+9 F
+10 F
+11 F
+12 T
+13 F
+14 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case45.txt
+53
+1 F
+2 F
+3 F
+4 T
+5 F
+6 F
+7 T
+8 T
+9 F
+10 F
+11 F
+12 F
+13 F
+14 T
+15 T
+16 T
+17 T
+18 T
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case46.txt
+72
+1 T
+2 F
+3 F
+4 T
+5 F
+6 F
+7 F
+8 F
+9 F
+10 F
+11 T
+12 T
+13 T
+14 F
+15 T
+16 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case47.txt
+36
+1 F
+2 T
+3 F
+4 F
+5 F
+6 T
+7 T
+8 F
+9 F
+10 F
+11 F
+12 F
+13 F
+14 F
+15 F
+16 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case48.txt
+45
+1 F
+2 F
+3 F
+4 F
+5 F
+6 T
+7 F
+8 F
+9 T
+10 T
+11 T
+12 T
+13 T
+14 F
+15 T
+16 T
+17 F
+18 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case49.txt
+40
+1 F
+2 F
+3 F
+4 F
+5 F
+6 F
+7 F
+8 F
+9 T
+10 T
+11 F
+12 T
+13 T
+14 F
+15 T
+16 F
+17 T
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case4.txt
+9
+1 F
+2 F
+3 F
+4 F
+5 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case50.txt
+43
+1 F
+2 F
+3 F
+4 F
+5 F
+6 T
+7 F
+8 T
+9 F
+10 F
+11 F
+12 F
+13 F
+14 F
+15 F
+16 T
+17 T
+18 T
+19 F
+20 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case5.txt
+8
+1 F
+2 F
+3 T
+4 F
+5 F
+6 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case6.txt
+16
+1 F
+2 T
+3 F
+4 T
+5 F
+6 T
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case7.txt
+14
+1 F
+2 F
+3 F
+4 T
+5 T
+6 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case8.txt
+11
+1 F
+2 F
+3 T
+4 F
+5 F
+6 F
+7 F
+8 F
+
+Running /cs/home/stu/tremblmj/cs452/test_cases/test_case9.txt
+6
+1 F
+2 F
+3 F
+4 F
+5 F
+6 F
