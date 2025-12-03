@@ -25,8 +25,8 @@ def main():
     runtime = time.time() - start
 
     print(best_val)
-    print(" ".join("1" if x else "0" for x in best_assignment))
-    print(f"runtime: {runtime:.6f} seconds")
+    for i, val in enumerate(best_assignment, start=1):
+        print(f"{i} {'T' if val else 'F'}")
 
 if __name__ == "__main__":
     main()
