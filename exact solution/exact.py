@@ -28,5 +28,4 @@ def main():
         print(f"{i} {'T' if val else 'F'}")
 
 if __name__ == "__main__":
-    print("Running...")
     main()
