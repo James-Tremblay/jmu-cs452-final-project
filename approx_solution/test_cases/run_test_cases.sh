@@ -2,7 +2,7 @@
 
 SOLVER="../approx.py"
 TESTDIR="."
-TVAL=2  # your -t flag
+TVAL=5  # your -t flag
 
 echo "Running all test cases..."
 shopt -s nullglob   # avoids literal *.txt error
@@ -22,19 +22,19 @@ for f in "${FILES[@]}"; do
         continue
     fi
     
-    echo "======================================="
-    echo "Running: $f"
-    echo "---------------------------------------"
+    echo "======================================="  >> results.txt
+    echo "Running: $f" >> results.txt
+    echo "---------------------------------------" >> results.txt
 
     START=$(date +%s%N)
 
-    python "$SOLVER" "$f" -t $TVAL -p 4 >> results.txt
+    python "$SOLVER" "$f" >> results.txt
     echo "" >> results.txt
 
     END=$(date +%s%N)
     RUNTIME=$(( (END - START)/1000000 ))
 
-    echo "Completed in ${RUNTIME} ms"
+    echo "Completed in ${RUNTIME} ms" >> results.txt
 done
 
 echo "======================================="
