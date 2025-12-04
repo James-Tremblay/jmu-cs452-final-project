@@ -1,72 +1,25 @@
+#!/usr/bin/env python3
 """
-Approximation solution for Max 3-SAT using an anytime random-assignment algorithm.
-
-This program reads a Max-3-SAT instance, repeatedly generates random assignments,
-evaluates the number of satisfied clauses, and keeps the best assignment found 
-within a fixed time limit.
-
-** Input Format **
-The first line contains two integers:
-    n  m
-where n is the number of boolean variables and m is the number of clauses.
-Variables are numbered 1 through n.
-
-Each of the next m lines contains three integers representing a clause.
-A positive integer k represents the literal x_k, and a negative integer -k
-represents the negated literal ¬x_k. Each clause has exactly three literals.
-
-Example:
-    4 3
-    1 -2 3
-    -1 2 -4
-    3 4 -2
-
-** Output Format **
-The first line prints the maximum number of clauses satisfied by the best 
-assignment found by the algorithm.
-
-This is followed by n lines, one per variable, in this format:
-    variable_number  T/F
-where T means the variable is assigned True and F means False.
-
-Example:
-    2
-    1 T
-    2 F
-    3 T
-    4 F
-
-This algorithm is anytime: it can be stopped at any moment and always has a 
-valid best-so-far assignment.
-
-Use dimacs format for testing.
+Faster Max-3-SAT anytime approximation using WalkSAT-style local search
+Keeps input/output format identical to the original program.
 """
-
 import random
 import sys
 import time
-import threading
-# import matplotlib.pyplot as plt
+from multiprocessing import Process, Pipe
 import argparse
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="My program description")
-
-    # Add integer flags -t and -p
-    parser.add_argument("-t", type=int, required=True,
+    parser = argparse.ArgumentParser(description="Max-3-SAT WalkSAT-style anytime solver")
+    parser.add_argument("-t", type=int, default=5,
                         help="Amount of time for program to run (in seconds)")
-
     parser.add_argument("-p", type=int, default=1,
                         help="The number of parallel processes to use")
-
-    # Positional filename argument
-    parser.add_argument("filename", type=str,
-                        help="Input file name")
-
+    parser.add_argument("filename", type=str, nargs='?', default="-",
+                        help="Input file name (default: read from stdin)")
     return parser.parse_args()
 
 def read_input():
-    """Reads n, m, then m clauses of 3 literals each."""
     n, m = map(int, sys.stdin.readline().strip().split())
     clauses = []
     for _ in range(m):
@@ -75,7 +28,6 @@ def read_input():
     return n, m, clauses
 
 def read_file(filename):
-    """Reads n, m, then m clauses of 3 literals each from a file."""
     with open(filename, 'r') as f:
         n, m = map(int, f.readline().strip().split())
         clauses = []
@@ -84,92 +36,259 @@ def read_file(filename):
             clauses.append((a, b, c))
     return n, m, clauses
 
+# helper: literal satisfied given assignment list (1..n)
+def literal_satisfied(lit, assign):
+    if lit > 0:
+        return assign[lit]
+    else:
+        return not assign[-lit]
 
-def evaluate(clauses, assignment):
-    """Count satisfied clauses under assignment."""
+def initial_assignment(n):
+    # list indexed 0..n, ignore index 0 for simplicity
+    return [False] + [bool(random.getrandbits(1)) for _ in range(n)]
+
+def build_occurrences(n, clauses):
+    """Build pos_occ and neg_occ: for each var, list of clause indices where it appears"""
+    m = len(clauses)
+    pos_occ = [[] for _ in range(n+1)]
+    neg_occ = [[] for _ in range(n+1)]
+    for i, cl in enumerate(clauses):
+        a,b,c = cl
+        for lit in (a,b,c):
+            v = abs(lit)
+            if lit > 0:
+                pos_occ[v].append(i)
+            else:
+                neg_occ[v].append(i)
+    return pos_occ, neg_occ
+
+def evaluate_initial_true_counts(clauses, assign):
+    """Return true_count list and initial satisfied count"""
+    m = len(clauses)
+    true_count = [0]*m
     sat = 0
-    for (a, b, c) in clauses:
-        if ((a > 0 and assignment[a]) or (a < 0 and not assignment[-a]) or
-            (b > 0 and assignment[b]) or (b < 0 and not assignment[-b]) or
-            (c > 0 and assignment[c]) or (c < 0 and not assignment[-c])):
-            sat += 1
-    return sat
+    for i, cl in enumerate(clauses):
+        a,b,c = cl
+        cnt = 0
+        if literal_satisfied(a, assign): cnt += 1
+        if literal_satisfied(b, assign): cnt += 1
+        if literal_satisfied(c, assign): cnt += 1
+        true_count[i] = cnt
+        if cnt > 0: sat += 1
+    return true_count, sat
 
-
-def random_assignment(n):
-    """Generate a random True/False assignment for n variables."""
-    return {i: bool(random.getrandbits(1)) for i in range(1, n+1)}
-
-
-def anytime_max3sat(n, m, clauses, time_limit=1.0):
+def compute_flip_gain(var, clauses, assign, true_count, pos_occ, neg_occ):
     """
-    Anytime Max-3-SAT approximation algorithm.
+    Compute change in number of satisfied clauses (delta) when flipping var.
+    Only iterates clauses where var occurs.
+    """
+    delta = 0
+    # if var is True now, flipping will make it False, and vice versa
+    cur_val = assign[var]
+    # positive occurrences: literal is var
+    for ci in pos_occ[var]:
+        cur_cnt = true_count[ci]
+        # contribution before flip: var contributes if cur_val True
+        contrib_before = 1 if cur_val else 0
+        contrib_after = 1 if (not cur_val) else 0
+        new_cnt = cur_cnt - contrib_before + contrib_after
+        # clause satisfaction change: was satisfied? will be?
+        if (cur_cnt > 0) and (new_cnt == 0):
+            delta -= 1
+        elif (cur_cnt == 0) and (new_cnt > 0):
+            delta += 1
+    # negative occurrences: literal is ¬var
+    for ci in neg_occ[var]:
+        cur_cnt = true_count[ci]
+        # contribution before flip: ¬var contributes if cur_val is False
+        contrib_before = 1 if (not cur_val) else 0
+        contrib_after = 1 if (not (not cur_val)) else 0  # after flip, var becomes not cur_val
+        # but simpler: contrib_after = 1 if cur_val else 0
+        contrib_after = 1 if cur_val else 0
+        new_cnt = cur_cnt - contrib_before + contrib_after
+        if (cur_cnt > 0) and (new_cnt == 0):
+            delta -= 1
+        elif (cur_cnt == 0) and (new_cnt > 0):
+            delta += 1
+    return delta
 
-    Randomly generates complete assignments to all n variables and evaluates
-    how many of the m clauses are satisfied. Continues generating random
-    assignments until the time_limit (in seconds) is reached.
+def do_flip(var, assign, true_count, clauses, pos_occ, neg_occ):
+    """Flip var and update true_count. Return new satisfied count change (delta)."""
+    cur_val = assign[var]
+    delta = 0
+    # positive occurrences
+    for ci in pos_occ[var]:
+        # compute contribution delta for this clause
+        # contribution before flip
+        contrib_before = 1 if cur_val else 0
+        contrib_after = 1 if (not cur_val) else 0
+        prev_cnt = true_count[ci]
+        new_cnt = prev_cnt - contrib_before + contrib_after
+        # update true_count
+        true_count[ci] = new_cnt
+        if prev_cnt == 0 and new_cnt > 0:
+            delta += 1
+        elif prev_cnt > 0 and new_cnt == 0:
+            delta -= 1
+    # negative occurrences
+    for ci in neg_occ[var]:
+        contrib_before = 1 if (not cur_val) else 0
+        contrib_after = 1 if cur_val else 0
+        prev_cnt = true_count[ci]
+        new_cnt = prev_cnt - contrib_before + contrib_after
+        true_count[ci] = new_cnt
+        if prev_cnt == 0 and new_cnt > 0:
+            delta += 1
+        elif prev_cnt > 0 and new_cnt == 0:
+            delta -= 1
+    # perform flip
+    assign[var] = not cur_val
+    return delta
 
-    Returns:
-        (best_score, best_assignment, history)
-        history: list of (elapsed_seconds, best_score) when a new best was found
+def walk_sat_anytime(n, m, clauses, time_limit=1.0, p_random_walk=0.4, max_flips_per_try=1000):
+    """
+    WalkSAT-style local search with restarts.
+    - p_random_walk: probability to flip a random variable in an unsatisfied clause
+    - max_flips_per_try: flips before a random restart
     """
     start = time.time()
+    pos_occ, neg_occ = build_occurrences(n, clauses)
+
     best_assign = None
     best_score = -1
     history = []
 
+    # keep running until time limit
     while time.time() - start < time_limit:
-        if best_score == m:
-            break  # Optimal solution found
-        assign = random_assignment(n)
-        score = evaluate(clauses, assign)
-        if score > best_score:
-            best_score = score
-            best_assign = assign
-            elapsed = time.time() - start
-            history.append((elapsed, best_score))
+        # random restart
+        assign = initial_assignment(n)
+        true_count, sat = evaluate_initial_true_counts(clauses, assign)
+        if sat > best_score:
+            best_score = sat
+            best_assign = assign.copy()
+            history.append((time.time()-start, best_score))
+            if best_score == m:
+                break
 
+        flips = 0
+        # central loop for this restart
+        while flips < max_flips_per_try and (time.time() - start < time_limit):
+            if sat == m:
+                # perfect assignment
+                if sat > best_score:
+                    best_score = sat
+                    best_assign = assign.copy()
+                    history.append((time.time()-start, best_score))
+                return best_score, best_assign, history
+
+            # pick unsatisfied clause uniformly
+            # we can sample by scanning for a random unsatisfied clause; since clauses are small,
+            # this is acceptable. To avoid O(m) scan every time, we do one cheap sample attempt:
+            # pick a random clause and check if unsatisfied; try up to 5 times, else scan collect unsat list once.
+            chosen_clause_index = None
+            for _ in range(5):
+                ci = random.randrange(m)
+                if true_count[ci] == 0:
+                    chosen_clause_index = ci
+                    break
+            if chosen_clause_index is None:
+                # fallback: scan to build unsatisfied list
+                unsat = [i for i in range(m) if true_count[i] == 0]
+                if not unsat:
+                    # all satisfied
+                    if sat > best_score:
+                        best_score = sat
+                        best_assign = assign.copy()
+                        history.append((time.time()-start, best_score))
+                    break
+                chosen_clause_index = random.choice(unsat)
+
+            a,b,c = clauses[chosen_clause_index]
+            lits = (a,b,c)
+            # with prob p_random_walk flip a random var from clause
+            if random.random() < p_random_walk:
+                lit = random.choice(lits)
+                var = abs(lit)
+                delta = do_flip(var, assign, true_count, clauses, pos_occ, neg_occ)
+                sat += delta
+            else:
+                # choose variable in clause that gives best gain (max increase in satisfied clauses)
+                best_var = None
+                best_gain = -10**9
+                for lit in lits:
+                    var = abs(lit)
+                    gain = compute_flip_gain(var, clauses, assign, true_count, pos_occ, neg_occ)
+                    if gain > best_gain:
+                        best_gain = gain
+                        best_var = var
+                # tie-breaker randomness
+                if best_var is None:
+                    best_var = abs(random.choice(lits))
+                    best_gain = compute_flip_gain(best_var, clauses, assign, true_count, pos_occ, neg_occ)
+                delta = do_flip(best_var, assign, true_count, clauses, pos_occ, neg_occ)
+                sat += delta
+
+            flips += 1
+
+            # record best
+            if sat > best_score:
+                best_score = sat
+                best_assign = assign.copy()
+                history.append((time.time()-start, best_score))
+                if best_score == m:
+                    return best_score, best_assign, history
+
+        # end of restart, continue if time remains
     return best_score, best_assign, history
 
+def worker(n, m, clauses, time_limit, conn):
+    score, assign, _ = walk_sat_anytime(n, m, clauses, time_limit=time_limit)
+    conn.send((score, assign))
+    conn.close()
 
 def main():
-    """Main function to read input, run the algorithm, and print output."""
     args = parse_args()
     filename = args.filename
-    n, m, clauses = read_file(filename)
-    time_limit = args.t  # Use -t argument as time limit in seconds
-    
-    # print("Running anytime Max-3-SAT approximation...")
-    best_score, best_assign, history = anytime_max3sat(n, m, clauses, time_limit=time_limit)
+    # If not file specified, read from stdin
+    if filename == "-":
+        n, m, clauses = read_input()
+    else:
+        n, m, clauses = read_file(filename)
 
-    # Output format
+    # Ensure parameters are valid
+    time_limit = max(1, args.t)
+    threads = max(1, args.p)
+
+    if threads == 1:
+        best_score, best_assign, _ = walk_sat_anytime(n, m, clauses, time_limit=time_limit)
+    else:
+        processes = []
+        conns = []
+        for i in range(threads):
+            parent_conn, child_conn = Pipe()
+            p = Process(target=worker, args=(n, m, clauses, time_limit, child_conn))
+            p.start()
+            processes.append(p)
+            conns.append(parent_conn)
+
+        for p in processes:
+            p.join()
+
+        best_score = -1
+        best_assign = None
+        for conn in conns:
+            score, assign = conn.recv()
+            if score > best_score:
+                best_score = score
+                best_assign = assign
+
+    # ensure we have an assignment (if none found, create a random one)
+    if best_assign is None:
+        best_assign = initial_assignment(n)
+
     print(best_score)
     for i in range(1, n+1):
         print(i, "T" if best_assign[i] else "F")
-
-    # # Plot best score over time and save figure
-    # if history:
-    #     times, scores = zip(*history)
-    #     times = list(times)
-    #     scores = list(scores)
-        
-    #     # Add final point at time_limit to show flat line
-    #     if times[-1] < time_limit:
-    #         times.append(time_limit)
-    #         scores.append(scores[-1])
-        
-    #     plt.figure()
-    #     plt.axhline(y=m, color='r', linestyle='--', label='Number of Clauses (m)')
-    #     plt.plot(times, scores, marker='o', label='Best score over time')
-    #     plt.legend()
-    #     plt.xlabel('Time (s)')
-    #     plt.ylabel('Best score (satisfied clauses)')
-    #     plt.title('Max-3-SAT: best score over time')
-    #     plt.grid(True)
-    #     plt.tight_layout()
-    #     plt.show()
-    #     plt.close()
-
 
 if __name__ == "__main__":
     main()
