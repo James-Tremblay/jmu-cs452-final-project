@@ -1,7 +1,20 @@
-itertools is a useful package for brute source
-list of variables and range is true false.
-should only take me one line of code in a function
+The O runtime of the exact solution is... 
 
-then we have to write an NP verifier
+O(m * 2^n)
 
-Molloys exact solution is 14 lines of code
+As there are 2^n total possible assignments for my program to make, and for each assignment
+it evaluates all m clauses and counts how many it satisfies. Thus m * 2^n
+
+Example command line usage:
+python3 exact.py test_cases/test_case1.txt
+
+which produces
+10
+1 F
+2 F
+3 F
+4 F
+5 F
+6 F
+7 F
+8 F

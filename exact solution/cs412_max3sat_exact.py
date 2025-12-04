@@ -10,12 +10,16 @@ def clause_sat(clause, assignment):
     )
 
 def main():
-    path = sys.argv[1]
-    with open(path) as f:
-        n, m = map(int, f.readline().split())
-        clauses = [tuple(map(int, f.readline().split())) for _ in range(m)]
+    data = sys.stdin.read().strip().split()
+    n = int(data[0])
+    m = int(data[1])
 
-    start = time.time()
+    clauses = []
+    idx = 2
+    for _ in range(m):
+        a = int(data[idx]); b = int(data[idx+1]); c = int(data[idx+2])
+        idx += 3
+        clauses.append((a, b, c))
 
     best_val = -1
     best_assignment = None
@@ -25,8 +29,6 @@ def main():
         if val > best_val:
             best_val = val
             best_assignment = a
-            
-    runtime = time.time() - start
 
     print(best_val)
     for i, val in enumerate(best_assignment, start=1):
