@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
 import sys, time, itertools
 
-def clause_sat(clause, a):
-    return any((lit > 0 and a[lit-1]) or (lit < 0 and not a[-lit-1]) for lit in clause)
+def clause_sat(clause, assignment):
+    a, b, c = clause
+    return (
+        (a > 0 and assignment[a-1]) or (a < 0 and not assignment[-a-1]) or
+        (b > 0 and assignment[b-1]) or (b < 0 and not assignment[-b-1]) or
+        (c > 0 and assignment[c-1]) or (c < 0 and not assignment[-c-1])
+    )
 
 def main():
     path = sys.argv[1]
