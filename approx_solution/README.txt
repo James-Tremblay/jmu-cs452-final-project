@@ -1,12 +1,10 @@
+ n = number of variables
 m = number of clauses
-n = number of variables
-It takes O(m) to build occurences. 
-It takes O(n) for the initial random assignment. 
-It takes O(m) to evaluate every clause.
-So for the preprocessing it takes overal O(m+n)
-For each iteration, when choosing some variable, u, 
-let k be the number of clauses involving u. 
-In order to evaluate the flip of u, it takes k steps.
+The cost per flip is O(m/n). 
+Since this runs for a constant number for flips, 
+the runtime for a single restart is O(m/n). 
+Since most of time m>>n, it is closer to O(m).
+
 
 ====================================
 Example Run:

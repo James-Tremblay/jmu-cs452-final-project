@@ -6,8 +6,9 @@ Keeps input/output format identical to the original program.
 import random
 import sys
 import time
-from multiprocessing import Process, Pipe
+from multiprocessing import Process, Pipe, Pool
 import argparse
+import matplotlib.pyplot as plt
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Max-3-SAT WalkSAT-style anytime solver")
@@ -237,58 +238,92 @@ def walk_sat_anytime(n, m, clauses, time_limit=1.0, p_random_walk=0.4, max_flips
                 history.append((time.time()-start, best_score))
                 if best_score == m:
                     return best_score, best_assign, history
+                
+    if not history or history[-1][0] < time_limit:
+        history.append((time_limit, best_score))
 
         # end of restart, continue if time remains
     return best_score, best_assign, history
 
 def worker(n, m, clauses, time_limit, conn):
-    score, assign, _ = walk_sat_anytime(n, m, clauses, time_limit=time_limit)
-    conn.send((score, assign))
+    score, assign, history = walk_sat_anytime(n, m, clauses, time_limit=time_limit)
+    conn.send((score, assign, history))
     conn.close()
+
+def run_worker(args):
+    n, m, clauses, time_limit = args
+    return walk_sat_anytime(n, m, clauses, time_limit=time_limit)
+
+
+def merge_histories(histories):
+    """Merge multiple histories into a single timeline"""
+    all_times = sorted(set(t for hist in histories for t,_ in hist))
+    merged_scores = []
+
+    for t in all_times:
+        # take max score across all histories at or before time t
+        max_score = max(
+            max((score for time, score in hist if time <= t), default=0)
+            for hist in histories
+        )
+        merged_scores.append(max_score)
+
+    return all_times, merged_scores
+
 
 def main():
     args = parse_args()
     filename = args.filename
-    # If not file specified, read from stdin
     if filename == "-":
         n, m, clauses = read_input()
     else:
         n, m, clauses = read_file(filename)
 
-    # Ensure parameters are valid
     time_limit = max(1, args.t)
-    threads = max(1, args.p)
+    threads_list = [1, 2, 4, 8, 16]  # levels of parallelism to compare
+    results = {}
 
-    if threads == 1:
-        best_score, best_assign, _ = walk_sat_anytime(n, m, clauses, time_limit=time_limit)
-    else:
-        processes = []
-        conns = []
-        for i in range(threads):
-            parent_conn, child_conn = Pipe()
-            p = Process(target=worker, args=(n, m, clauses, time_limit, child_conn))
-            p.start()
-            processes.append(p)
-            conns.append(parent_conn)
+    for threads in threads_list:
+        histories = []
 
-        for p in processes:
-            p.join()
+        if threads == 1:
+            # single-threaded
+            best_score, best_assign, history = walk_sat_anytime(n, m, clauses, time_limit=time_limit)
+            histories.append(history)
+        else:
+            # multi-process with Pool
+            pool = Pool(threads)
+            args_list = [(n, m, clauses, time_limit) for _ in range(threads)]
+            async_results = [pool.apply_async(run_worker, (args,)) for args in args_list]
 
-        best_score = -1
-        best_assign = None
-        for conn in conns:
-            score, assign = conn.recv()
-            if score > best_score:
-                best_score = score
-                best_assign = assign
+            best_score = -1
+            for r in async_results:
+                try:
+                    score, assign, history = r.get(timeout=time_limit + 2)  # safe timeout
+                    histories.append(history)
+                    if score > best_score:
+                        best_score = score
+                except Exception as e:
+                    print("Worker timed out or failed:", e)
 
-    # ensure we have an assignment (if none found, create a random one)
-    if best_assign is None:
-        best_assign = initial_assignment(n)
+            pool.close()
+            pool.join()
 
-    print(best_score)
-    for i in range(1, n+1):
-        print(i, "T" if best_assign[i] else "F")
+        # merge histories for this level of parallelism
+        times, scores = merge_histories(histories)
+        results[threads] = (times, scores)
+        print(f"Threads {threads}: best score = {max(scores)}")
+
+    # plot results
+    plt.figure(figsize=(10,6))
+    for threads, (times, scores) in results.items():
+        plt.plot(times, scores, label=f"{threads} threads")
+    plt.xlabel("Time (s)")
+    plt.ylabel("Max satisfied clauses")
+    plt.title("WalkSAT Anytime Approximation with Parallelism")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
 
 if __name__ == "__main__":
     main()
