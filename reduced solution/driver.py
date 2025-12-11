@@ -1,3 +1,4 @@
+import argparse
 import ast
 import csv
 import glob
@@ -68,6 +69,15 @@ def parse_mis_size(raw_output):
     return -1
 
 def main():
+    parser = argparse.ArgumentParser(description="Run Max 3-SAT reduction and approximation tests")
+    parser.add_argument(
+        "-n", "--num-tests",
+        type=int,
+        default=None,
+        help="Number of test cases to run (default: run all tests)"
+    )
+    args = parser.parse_args()
+    
     test_cases_dir = "test_cases"
     results_file = "results.csv"
     approx_time = APPROX_TIME_LIMIT
@@ -78,9 +88,14 @@ def main():
         key=lambda path: int(''.join(filter(str.isdigit, os.path.basename(path)))),
     )
     
+    # Limit to specified number of tests if provided
+    if args.num_tests is not None:
+        test_files = test_files[:args.num_tests]
+    
     results = []
     
-    print(f"Found {len(test_files)} test cases.")
+    total_tests = len(glob.glob(os.path.join(test_cases_dir, "test_case*.txt")))
+    print(f"Found {total_tests} total test cases. Running {len(test_files)} test case(s).")
     
     # Paths to scripts
     # Assuming we run from 'reduced solution' directory

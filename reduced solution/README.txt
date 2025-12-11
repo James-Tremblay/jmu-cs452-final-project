@@ -36,6 +36,9 @@ Usage:
    cd "reduced solution"
    python3 driver.py
 
+   I added -n to say how many tests to run as the last 50 take awhile.
+   python3 driver.py -n 100
+
 4. Plot runtime and correctness evidence:
 
    python3 plot_results.py
