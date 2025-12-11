@@ -39,9 +39,3 @@ Usage:
 4. Plot runtime and correctness evidence:
 
    python3 plot_results.py
-
-   Generates:
-   - runtime_vs_size.png
-   - solution_quality.png
-   - approx_vs_mis.png
-

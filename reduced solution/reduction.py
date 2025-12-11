@@ -38,7 +38,7 @@ def parse_input():
 
 def is_consistent(l1, l2):
     """
-    Check if two literals are consistent (i.e., not negations of each other).
+    Check if two literals are consistent.
     """
     return l1 != -l2
 
@@ -48,7 +48,7 @@ def reduce_to_independent_set(n, c, clauses):
     Reduces Max 3-SAT to Maximum Independent Set (MIS).
     
     From the problem description:
-    The graph G contains exactly 3k vertices (where k=c is the number of clauses).
+    The graph G contains exactly 3c vertices (where c is the number of clauses).
     Two vertices in G are connected by an edge if:
     1. They correspond to literals in the SAME clause (forming a triangle per clause).
     2. They correspond to a variable and its inverse (contradictory literals).

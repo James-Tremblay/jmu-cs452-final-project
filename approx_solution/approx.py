@@ -11,7 +11,7 @@ import argparse
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Max-3-SAT WalkSAT-style anytime solver")
-    parser.add_argument("-t", type=int, default=5,
+    parser.add_argument("-t", type=int, default=2,
                         help="Amount of time for program to run (in seconds)")
     parser.add_argument("-p", type=int, default=1,
                         help="The number of parallel processes to use")
