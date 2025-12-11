@@ -1,0 +1,551 @@
+
+=======================================
+Running: ./test_case01.txt
+---------------------------------------
+Approximate Solution:
+10
+
+Completed in 130 ms
+Exact Solution:
+10
+
+Completed in 73 ms
+=======================================
+Running: ./test_case02.txt
+---------------------------------------
+Approximate Solution:
+24
+
+Completed in 133 ms
+Exact Solution:
+24
+
+Completed in 74 ms
+=======================================
+Running: ./test_case03.txt
+---------------------------------------
+Approximate Solution:
+7
+
+Completed in 138 ms
+Exact Solution:
+7
+
+Completed in 82 ms
+=======================================
+Running: ./test_case04.txt
+---------------------------------------
+Approximate Solution:
+9
+
+Completed in 174 ms
+Exact Solution:
+9
+
+Completed in 81 ms
+=======================================
+Running: ./test_case05.txt
+---------------------------------------
+Approximate Solution:
+8
+
+Completed in 134 ms
+Exact Solution:
+8
+
+Completed in 86 ms
+=======================================
+Running: ./test_case06.txt
+---------------------------------------
+Approximate Solution:
+16
+
+Completed in 150 ms
+Exact Solution:
+16
+
+Completed in 88 ms
+=======================================
+Running: ./test_case07.txt
+---------------------------------------
+Approximate Solution:
+14
+
+Completed in 143 ms
+Exact Solution:
+14
+
+Completed in 109 ms
+=======================================
+Running: ./test_case08.txt
+---------------------------------------
+Approximate Solution:
+11
+
+Completed in 146 ms
+Exact Solution:
+11
+
+Completed in 82 ms
+=======================================
+Running: ./test_case09.txt
+---------------------------------------
+Approximate Solution:
+6
+
+Completed in 158 ms
+Exact Solution:
+6
+
+Completed in 88 ms
+=======================================
+Running: ./test_case10.txt
+---------------------------------------
+Approximate Solution:
+16
+
+Completed in 152 ms
+Exact Solution:
+16
+
+Completed in 90 ms
+=======================================
+Running: ./test_case11.txt
+---------------------------------------
+Approximate Solution:
+14
+
+Completed in 146 ms
+Exact Solution:
+14
+
+Completed in 79 ms
+=======================================
+Running: ./test_case12.txt
+---------------------------------------
+Approximate Solution:
+18
+
+Completed in 138 ms
+Exact Solution:
+18
+
+Completed in 80 ms
+=======================================
+Running: ./test_case13.txt
+---------------------------------------
+Approximate Solution:
+7
+
+Completed in 132 ms
+Exact Solution:
+7
+
+Completed in 80 ms
+=======================================
+Running: ./test_case14.txt
+---------------------------------------
+Approximate Solution:
+21
+
+Completed in 149 ms
+Exact Solution:
+21
+
+Completed in 87 ms
+=======================================
+Running: ./test_case15.txt
+---------------------------------------
+Approximate Solution:
+16
+
+Completed in 139 ms
+Exact Solution:
+16
+
+Completed in 78 ms
+=======================================
+Running: ./test_case16.txt
+---------------------------------------
+Approximate Solution:
+5
+
+Completed in 131 ms
+Exact Solution:
+5
+
+Completed in 76 ms
+=======================================
+Running: ./test_case17.txt
+---------------------------------------
+Approximate Solution:
+7
+
+Completed in 132 ms
+Exact Solution:
+7
+
+Completed in 89 ms
+=======================================
+Running: ./test_case18.txt
+---------------------------------------
+Approximate Solution:
+10
+
+Completed in 132 ms
+Exact Solution:
+10
+
+Completed in 91 ms
+=======================================
+Running: ./test_case19.txt
+---------------------------------------
+Approximate Solution:
+15
+
+Completed in 128 ms
+Exact Solution:
+15
+
+Completed in 75 ms
+=======================================
+Running: ./test_case20.txt
+---------------------------------------
+Approximate Solution:
+5
+
+Completed in 131 ms
+Exact Solution:
+5
+
+Completed in 77 ms
+=======================================
+Running: ./test_case21.txt
+---------------------------------------
+Approximate Solution:
+15
+
+Completed in 131 ms
+Exact Solution:
+15
+
+Completed in 75 ms
+=======================================
+Running: ./test_case22.txt
+---------------------------------------
+Approximate Solution:
+4
+
+Completed in 136 ms
+Exact Solution:
+4
+
+Completed in 79 ms
+=======================================
+Running: ./test_case23.txt
+---------------------------------------
+Approximate Solution:
+9
+
+Completed in 131 ms
+Exact Solution:
+9
+
+Completed in 83 ms
+=======================================
+Running: ./test_case24.txt
+---------------------------------------
+Approximate Solution:
+13
+
+Completed in 131 ms
+Exact Solution:
+13
+
+Completed in 73 ms
+=======================================
+Running: ./test_case25.txt
+---------------------------------------
+Approximate Solution:
+14
+
+Completed in 126 ms
+Exact Solution:
+14
+
+Completed in 89 ms
+=======================================
+Running: ./test_case26.txt
+---------------------------------------
+Approximate Solution:
+18
+
+Completed in 126 ms
+Exact Solution:
+18
+
+Completed in 71 ms
+=======================================
+Running: ./test_case27.txt
+---------------------------------------
+Approximate Solution:
+9
+
+Completed in 126 ms
+Exact Solution:
+9
+
+Completed in 69 ms
+=======================================
+Running: ./test_case28.txt
+---------------------------------------
+Approximate Solution:
+6
+
+Completed in 122 ms
+Exact Solution:
+6
+
+Completed in 70 ms
+=======================================
+Running: ./test_case29.txt
+---------------------------------------
+Approximate Solution:
+10
+
+Completed in 127 ms
+Exact Solution:
+10
+
+Completed in 83 ms
+=======================================
+Running: ./test_case30.txt
+---------------------------------------
+Approximate Solution:
+9
+
+Completed in 123 ms
+Exact Solution:
+9
+
+Completed in 76 ms
+=======================================
+Running: ./test_case31.txt
+---------------------------------------
+Approximate Solution:
+19
+
+Completed in 130 ms
+Exact Solution:
+19
+
+Completed in 86 ms
+=======================================
+Running: ./test_case32.txt
+---------------------------------------
+Approximate Solution:
+14
+
+Completed in 125 ms
+Exact Solution:
+14
+
+Completed in 87 ms
+=======================================
+Running: ./test_case33.txt
+---------------------------------------
+Approximate Solution:
+25
+
+Completed in 126 ms
+Exact Solution:
+25
+
+Completed in 84 ms
+=======================================
+Running: ./test_case34.txt
+---------------------------------------
+Approximate Solution:
+9
+
+Completed in 124 ms
+Exact Solution:
+9
+
+Completed in 74 ms
+=======================================
+Running: ./test_case35.txt
+---------------------------------------
+Approximate Solution:
+38
+
+Completed in 127 ms
+Exact Solution:
+38
+
+Completed in 114 ms
+=======================================
+Running: ./test_case36.txt
+---------------------------------------
+Approximate Solution:
+33
+
+Completed in 128 ms
+Exact Solution:
+33
+
+Completed in 115 ms
+=======================================
+Running: ./test_case37.txt
+---------------------------------------
+Approximate Solution:
+35
+
+Completed in 128 ms
+Exact Solution:
+35
+
+Completed in 86 ms
+=======================================
+Running: ./test_case38.txt
+---------------------------------------
+Approximate Solution:
+27
+
+Completed in 124 ms
+Exact Solution:
+27
+
+Completed in 99 ms
+=======================================
+Running: ./test_case39.txt
+---------------------------------------
+Approximate Solution:
+33
+
+Completed in 137 ms
+Exact Solution:
+33
+
+Completed in 136 ms
+=======================================
+Running: ./test_case40.txt
+---------------------------------------
+Approximate Solution:
+22
+
+Completed in 135 ms
+Exact Solution:
+22
+
+Completed in 79 ms
+=======================================
+Running: ./test_case41.txt
+---------------------------------------
+Approximate Solution:
+18
+
+Completed in 137 ms
+Exact Solution:
+18
+
+Completed in 112 ms
+=======================================
+Running: ./test_case42.txt
+---------------------------------------
+Approximate Solution:
+14
+
+Completed in 137 ms
+Exact Solution:
+14
+
+Completed in 83 ms
+=======================================
+Running: ./test_case43.txt
+---------------------------------------
+Approximate Solution:
+82
+
+Completed in 2130 ms
+Exact Solution:
+82
+
+Completed in 2426 ms
+=======================================
+Running: ./test_case44.txt
+---------------------------------------
+Approximate Solution:
+46
+
+Completed in 127 ms
+Exact Solution:
+46
+
+Completed in 234 ms
+=======================================
+Running: ./test_case45.txt
+---------------------------------------
+Approximate Solution:
+53
+
+Completed in 133 ms
+Exact Solution:
+53
+
+Completed in 3038 ms
+=======================================
+Running: ./test_case46.txt
+---------------------------------------
+Approximate Solution:
+72
+
+Completed in 2151 ms
+Exact Solution:
+72
+
+Completed in 1147 ms
+=======================================
+Running: ./test_case47.txt
+---------------------------------------
+Approximate Solution:
+36
+
+Completed in 126 ms
+Exact Solution:
+36
+
+Completed in 597 ms
+=======================================
+Running: ./test_case48.txt
+---------------------------------------
+Approximate Solution:
+45
+
+Completed in 127 ms
+Exact Solution:
+45
+
+Completed in 2594 ms
+=======================================
+Running: ./test_case49.txt
+---------------------------------------
+Approximate Solution:
+40
+
+Completed in 124 ms
+Exact Solution:
+40
+
+Completed in 1222 ms
+=======================================
+Running: ./test_case50.txt
+---------------------------------------
+Approximate Solution:
+43
+
+Completed in 122 ms
+Exact Solution:
+43
+
+Completed in 9836 ms

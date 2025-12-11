@@ -18,7 +18,7 @@ fi
 echo "" > results.txt
 
 for f in "${FILES[@]}"; do
-    if [[ "$(basename "$f")" == "results.txt" ]]; then
+    if [[ "$(basename "$f")" == "results2.txt" ]] || [[ "$(basename "$f")" == "results.txt" ]]; then
         continue
     fi
     
