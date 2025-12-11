@@ -11,25 +11,36 @@ APPROX_TIME_LIMIT = 1  # seconds per Max-3-SAT approximation run
 MIS_TIME_LIMIT = 1     # seconds per MIS heuristic run
 
 
-def run_process(command, *, input_data=None):
+def run_process(command, *, input_data=None, timeout=None):
     """
     Execute command, optionally providing stdin input_data. Returns tuple of
     (stdout, stderr, returncode, elapsed_seconds).
+    A timeout (seconds) can be supplied to avoid runaway exact solves.
     """
     start = time.time()
-    result = subprocess.run(
-        command,
-        input=input_data,
-        capture_output=True,
-        text=True,
-    )
-    elapsed = time.time() - start
-    if result.returncode != 0:
-        sys.stderr.write(
-            f"[driver] Command {' '.join(command)} failed ({result.returncode}):\n"
-            f"{result.stderr}\n"
+    try:
+        result = subprocess.run(
+            command,
+            input=input_data,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
         )
-    return result.stdout.strip(), result.stderr.strip(), result.returncode, elapsed
+        elapsed = time.time() - start
+        if result.returncode != 0:
+            sys.stderr.write(
+                f"[driver] Command {' '.join(command)} failed ({result.returncode}):\n"
+                f"{result.stderr}\n"
+            )
+        return result.stdout.strip(), result.stderr.strip(), result.returncode, elapsed
+    except subprocess.TimeoutExpired as exc:
+        elapsed = time.time() - start
+        sys.stderr.write(
+            f"[driver] Command {' '.join(command)} timed out after {timeout} seconds.\n"
+        )
+        stdout = (exc.stdout or "").strip()
+        stderr = (exc.stderr or "timeout").strip()
+        return stdout, stderr, -1, elapsed
 
 
 def parse_input_size(test_data):
@@ -43,6 +54,18 @@ def parse_input_size(test_data):
     if len(tokens) < 2:
         return 0
     return int(tokens[1])
+
+def parse_variable_count(test_data):
+    """
+    Return n (number of variables) from the test case contents.
+    """
+    first_line = test_data.strip().splitlines()
+    if not first_line:
+        return 0
+    tokens = first_line[0].split()
+    if not tokens:
+        return 0
+    return int(tokens[0])
 
 
 def parse_mis_size(raw_output):
@@ -76,6 +99,23 @@ def main():
         default=None,
         help="Number of test cases to run (default: run all tests)"
     )
+    parser.add_argument(
+        "--max-exact-n",
+        type=int,
+        default=22,
+        help="Run the exact solver only when n (variables) is at or below this threshold."
+    )
+    parser.add_argument(
+        "--exact-timeout",
+        type=float,
+        default=20.0,
+        help="Seconds to allow the exact solver to run before skipping the result."
+    )
+    parser.add_argument(
+        "--skip-exact",
+        action="store_true",
+        help="Skip running the exact solver (only compute bounds/approximations)."
+    )
     args = parser.parse_args()
     
     test_cases_dir = "test_cases"
@@ -102,6 +142,7 @@ def main():
     path_reduction = "reduction.py"
     path_max_ind_set = "max_ind_set.py"
     path_approx = os.path.join("..", "approx_solution", "approx.py")
+    path_exact = os.path.join("..", "exact solution", "exact.py")
     
     for test_file in test_files:
         case_name = os.path.basename(test_file)
@@ -110,9 +151,11 @@ def main():
             test_data = f.read()
         
         m = parse_input_size(test_data)
+        n_vars = parse_variable_count(test_data)
+        case_start = time.time()
         
         # 1. Compute bound (trivial m)
-        bound_stdout, _, _, _ = run_process(
+        bound_stdout, _, _, bound_time = run_process(
             ["python3", path_reduction, "--bound"],
             input_data=test_data,
         )
@@ -135,13 +178,28 @@ def main():
         mis_size = parse_mis_size(mis_stdout)
         
         # 4. Get approximation result directly on Max-3-SAT
-        approx_stdout, _, _, _ = run_process(
+        approx_stdout, _, _, approx_elapsed = run_process(
             ["python3", path_approx, "-t", str(approx_time), test_file],
         )
         try:
             approx_score = int(approx_stdout.splitlines()[0])
         except Exception:
             approx_score = -1
+        
+        # 5. Run exact solver when feasible
+        exact_score = ""
+        exact_time = 0.0
+        if not args.skip_exact and n_vars > 0 and n_vars <= args.max_exact_n:
+            exact_stdout, _, exact_rc, exact_time = run_process(
+                ["python3", path_exact, test_file],
+                timeout=args.exact_timeout,
+            )
+            if exact_rc == 0 and exact_stdout:
+                try:
+                    exact_score = int(exact_stdout.splitlines()[0])
+                except Exception:
+                    exact_score = ""
+        total_wall_time = time.time() - case_start
             
         results.append({
             "Test Case": case_name,
@@ -151,6 +209,10 @@ def main():
             "MIS Independent Set": mis_size,
             "Reduction Time (s)": red_time,
             "MIS Solve Time (s)": mis_time,
+            "Approx Time (s)": approx_elapsed,
+            "Exact Optimal": exact_score,
+            "Exact Solve Time (s)": exact_time,
+            "Wall Clock Time (s)": total_wall_time,
         })
         
     # Write to CSV
@@ -163,6 +225,10 @@ def main():
             "MIS Independent Set",
             "Reduction Time (s)",
             "MIS Solve Time (s)",
+            "Approx Time (s)",
+            "Exact Optimal",
+            "Exact Solve Time (s)",
+            "Wall Clock Time (s)",
         ]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
